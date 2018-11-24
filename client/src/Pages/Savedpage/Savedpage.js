@@ -3,16 +3,14 @@ import { Col, Row, Container } from "../../Components/Grid";
 import Card from "../../Components/Card";
 import API from "../../Utils/API"
 import DeleteButton from "../../Components/DeleteButton";
+import CommentButton from "../../Components/CommentButton";
 
 
 class SavedPage extends Component{
 
     state = {
         Articles: [],
-        Headline: "",
-        Summary: "",
-        URL: "",
-        _id: ""
+        Comment: "",
     }
 
     componentDidMount(){
@@ -24,6 +22,24 @@ class SavedPage extends Component{
           .then(res => this.setState({ Articles: res.data}))
           .catch(err => err);
     };
+
+    handleInputChange = event => {
+        event.preventDefault();
+
+        const { name, value } = event.target;
+        console.log(name)
+        console.log(value)
+        this.setState({[name]: value})
+
+    }
+
+    handleComment = event => {
+        event.preventDefault()
+
+        API.addComment({Comment: this.state.Comment})
+        .then(res => res)
+        .catch(err => err)
+    }
 
     getSaved = () => {
         API.getSaved()
@@ -52,9 +68,15 @@ class SavedPage extends Component{
                                 key=        {article._id}
                                 Summary=    {article.Summary || "No Summary"} 
                                 Headline=   {article.Headline} 
+                                URL=        {article.URL}
+                                change=     {this.handleInputChange}
+                                value=      {this.state.Comment}
+                                name=       "Comment"
                                 id=         {article._id}
-                                clicks=     {this.saveArticle}
-                            ><DeleteButton click={this.deleteSaved} name={article._id}/></Card>
+                                clicks=     {this.handleComment}
+                            ><DeleteButton click={this.deleteSaved} name={article._id}/>
+                            <CommentButton name={article._id}/>
+                            </Card>
                         </Col>
 
                         ))

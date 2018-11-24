@@ -6,3 +6,11 @@
 .card-content{
     margin-left: 15vw;
 }
+.card-title{
+    text-align: center;
+    margin-left: 4vw;
+    margin-right: 4vw;
+}
+.whiteText{
+    margin-right: 4vw;
+}

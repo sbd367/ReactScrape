@@ -20,7 +20,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 const db = require('./models');
 
-var result ={}
+var result =[]
 
 // Define API routes here
 app.get("/getSome", (req, res) => {
@@ -29,36 +29,35 @@ app.get("/getSome", (req, res) => {
       var $ = cheerio.load(response.data);
 
       $('h4.title').each( (i, element) => {
-          result.Headline = $(element)
+        result.push({
+          Headline: $(element)
           .children('a')
-          .text()
+          .text(),
 
-          result.URL = $(element)
+          URL: $(element)
           .children('a')
-          .attr('href')
+          .attr('href'),
 
-          result.Summary = $(element)
+          Summary: $(element)
           .parent()
           .parent()
           .children("div.content")
-          .children().children().text()
-
-
-          db.NYT_articles.create(result)
-          .then(function(dbarticle){
-              console.log("this")
-          })
-          .catch(function(err){
-              console.log(err);
-          })
+          .children().children().text(),
+        })   
+      });
+      
+      db.NYT_articles.create(result, (err, data) => {
+        if (err) return err;
+        console.log(data)
       })
+ 
+
+
       db.NYT_articles.find({}, (err, data) => {
         if (err) return err;
         console.log(data)
       })
-    .catch(function(err){
-        console.log(err);
-    })
+
   })
   res.end();
 })
@@ -66,18 +65,18 @@ app.get("/getSome", (req, res) => {
 app.get("/getArticles", function(req, res){
 
   db.NYT_articles.find({}, (err, data) => {
-      if(err) console.log(err);
+      if(err) console.log("this");
       else res.json(data)
   }) 
-})
+});
 
 app.get("/resetArticles", function(req, res){
 
-  db.NYT_articles.remove({}, (err, data)=>{
+  db.NYT_articles.deleteMany({}, (err, data)=>{
       if(err) console.log(err)
       else res.json(data)
   })
-})
+});
 
 app.get("/getArticle/:id", function(req, res){
 
@@ -85,7 +84,7 @@ app.get("/getArticle/:id", function(req, res){
       if(err) console.log(err);
       else res.json(data)
   }) 
-})
+});
 
 app.get("/getSaved", function(req, res){
 
@@ -93,15 +92,15 @@ app.get("/getSaved", function(req, res){
       if(err) console.log(err);
       else res.json(data)
   }) 
-})
+});
 
 app.post("/addSaved", function(req, res){
   db.Saved_Articles.create(req.body)
-})
+});
 
-app.post("/addComment/:id", function(req, res){
-  console.log(req.body)
-  db.Saved_Articles.updateOne({_id: mongojs.ObjectID(req.params.id)}, {$push: req.body}, (err, data)=>{
+app.post("/addComment/:comment", function(req, res){
+  console.log(req.params.comment)
+  db.Comment.updateOne({$push: req.body}, (err, data)=>{
       if(err) console.log(err);
       console.log(data)
   })
@@ -109,7 +108,6 @@ app.post("/addComment/:id", function(req, res){
 })
 
 app.get("/deleteSaved/:id", function(req, res){
-  // console.log(req.params.id);
 
   db.Saved_Articles.updateOne({_id: mongojs.ObjectID(req.params.id)}, {$set:{"deleted": true}}, (err, data) =>{
       console.log(data)

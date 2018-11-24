@@ -22,5 +22,9 @@ export default {
     },
     deleteSaved: function(id) {
         return axios.get("/deleteSaved/" + id)
+    },
+    addComment: function(comment){
+        return axios.post("/addComment/" + comment)
     }
+
   };

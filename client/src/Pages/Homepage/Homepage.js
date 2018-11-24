@@ -41,8 +41,15 @@ class HomePage extends Component{
        let newArticle = this.state.Articles.filter(el => el._id === event.target.name);
         
         API.saveArticle(newArticle)
-        .then(res => res)
-        .catch(err => err)
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            if (err){
+                console.log(err)
+                alert("this")
+            };
+        })
     };
 
     CleanPage = () =>{
@@ -74,6 +81,7 @@ class HomePage extends Component{
                                 key=        {article._id}
                                 Summary=    {article.Summary || "No Summary"} 
                                 Headline=   {article.Headline} 
+                                URL=        {article.URL}
                             ><SaveButton name={article._id} click={this.saveArticle}/></Card>
                         </Col>
 
