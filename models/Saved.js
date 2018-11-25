@@ -20,7 +20,10 @@ var SavedSchema = new Schema({
         required: true
     },
 
-    Comments:[{type: Schema.Types.ObjectId, ref: "Comment"}],
+    Comments:[{
+        type: Schema.Types.ObjectId, 
+        ref: "Comments"
+    }],
 
     deleted:{
         type: Boolean,

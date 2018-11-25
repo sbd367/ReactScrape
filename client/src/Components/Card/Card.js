@@ -11,7 +11,7 @@ export const Card = ({Headline, Summary, URL, id, children, clicks, change, name
             </form>
 
         <div className="modal-footer">
-            <a href="#!" className="modal-close waves-effect waves-green btn-flat">Close</a><a onClick={clicks} className="modal-close waves-effect waves-green btn-flat">Save</a>
+            <a href="#!" className="modal-close waves-effect waves-green btn-flat">Close</a><a onClick={clicks} name={id} className="modal-close waves-effect waves-green btn-flat">Save</a>
         </div>
     </div>
 </div>

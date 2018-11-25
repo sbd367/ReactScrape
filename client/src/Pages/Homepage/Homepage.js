@@ -39,26 +39,19 @@ class HomePage extends Component{
         event.preventDefault();
 
        let newArticle = this.state.Articles.filter(el => el._id === event.target.name);
+
+       console.log(newArticle[0]._id)
         
         API.saveArticle(newArticle)
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            if (err){
-                console.log(err)
-                alert("this")
-            };
-        })
     };
 
     CleanPage = () =>{
         API.deleteArticles()
-            .then(res =>{
+            .then(() =>{
   
                 this.setState({Articles: []})
             })
-            .catch(err => err)
+            .catch(err => console.log(err))
     };
 
     render(){
@@ -82,7 +75,8 @@ class HomePage extends Component{
                                 Summary=    {article.Summary || "No Summary"} 
                                 Headline=   {article.Headline} 
                                 URL=        {article.URL}
-                            ><SaveButton name={article._id} click={this.saveArticle}/></Card>
+                            ><SaveButton name={article._id} click={this.saveArticle}/>
+                            </Card>
                         </Col>
 
                         ))

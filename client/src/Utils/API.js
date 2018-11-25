@@ -9,9 +9,12 @@ export default {
     getSome: function() {
       return axios.get("/getSome");
     },
-    // Deletes the book with the given id
+    // Deletes all scraped data to clear the page
     deleteArticles: function() {
       return axios.get("/resetArticles");
+    },
+    deleteOne: function(id) {
+      return axios.get("/deleteArticle/"+ id)
     },
     // Saves a book to the database
     saveArticle: function(articleData) {
@@ -24,7 +27,10 @@ export default {
         return axios.get("/deleteSaved/" + id)
     },
     addComment: function(comment){
-        return axios.post("/addComment/" + comment)
+        return axios.post("/addComment/", comment)
+    },
+    getComments: function(id){
+      return axios.get("/getComments/" + id);
     }
 
   };

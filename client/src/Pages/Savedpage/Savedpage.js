@@ -10,7 +10,8 @@ class SavedPage extends Component{
 
     state = {
         Articles: [],
-        Comment: "",
+        Comments: [],
+        content: "",
     }
 
     componentDidMount(){
@@ -36,8 +37,25 @@ class SavedPage extends Component{
     handleComment = event => {
         event.preventDefault()
 
-        API.addComment({Comment: this.state.Comment})
+        let commentRequest = {
+            content: this.state.content,
+            articleId: event.target.name
+        }
+
+        console.log(commentRequest)
+
+        API.addComment(commentRequest)
         .then(res => res)
+        .catch(err => err)
+    }
+
+    getComments = event =>{
+        event.preventDefault();
+
+        let theId = event.target.name;
+        console.log(theId)
+        API.getComments(theId)
+        .then(res => this.setState({Comments: res.data.content}))
         .catch(err => err)
     }
 
@@ -62,22 +80,22 @@ class SavedPage extends Component{
             <Container fluid>
                 <Row>
                     {
-                        this.state.Articles.map( article =>(
-                        <Col key={article._id} size="col m12">
-                            <Card 
-                                key=        {article._id}
-                                Summary=    {article.Summary || "No Summary"} 
-                                Headline=   {article.Headline} 
-                                URL=        {article.URL}
-                                change=     {this.handleInputChange}
-                                value=      {this.state.Comment}
-                                name=       "Comment"
-                                id=         {article._id}
-                                clicks=     {this.handleComment}
-                            ><DeleteButton click={this.deleteSaved} name={article._id}/>
-                            <CommentButton name={article._id}/>
-                            </Card>
-                        </Col>
+                        this.state.Articles.map( article => (
+                            <Col key={article._id} size="col m12">
+                                <Card 
+                                    key=        {article._id}
+                                    Summary=    {article.Summary || "No Summary"} 
+                                    Headline=   {article.Headline} 
+                                    URL=        {article.URL}
+                                    change=     {this.handleInputChange}
+                                    value=      {this.state.content}
+                                    name=       "content"
+                                    id=         {article._id}
+                                    clicks=     {this.handleComment}
+                                ><DeleteButton click={this.deleteSaved} name={article._id}/>
+                                <CommentButton click={this.getComments} name={article._id}/>
+                                </Card>
+                            </Col>
 
                         ))
                     }

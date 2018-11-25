@@ -26,37 +26,37 @@ var result =[]
 app.get("/getSome", (req, res) => {
   axios.get("https://www.foxnews.com/category/us/us-regions/midwest").then( response =>{
       
-      var $ = cheerio.load(response.data);
+    var $ = cheerio.load(response.data);
 
-      $('h4.title').each( (i, element) => {
-        result.push({
-          Headline: $(element)
-          .children('a')
-          .text(),
+    $('h4.title').each( (i, element) => {
+      result.push({
+        Headline: $(element)
+        .children('a')
+        .text(),
 
-          URL: $(element)
-          .children('a')
-          .attr('href'),
+        URL: $(element)
+        .children('a')
+        .attr('href'),
 
-          Summary: $(element)
-          .parent()
-          .parent()
-          .children("div.content")
-          .children().children().text(),
-        })   
-      });
+        Summary: $(element)
+        .parent()
+        .parent()
+        .children("div.content")
+        .children().children().text(),
+      })   
+    });
       
-      db.NYT_articles.create(result, (err, data) => {
-        if (err) return err;
-        console.log(data)
-      })
+    db.NYT_articles.create(result, (err, data) => {
+      if (err) return err;
+      console.log(data)
+    })
  
 
 
-      db.NYT_articles.find({}, (err, data) => {
-        if (err) return err;
-        console.log(data)
-      })
+    db.NYT_articles.find({}, (err, data) => {
+      if (err) return err;
+      console.log(data)
+    })
 
   })
   res.end();
@@ -78,7 +78,7 @@ app.get("/resetArticles", function(req, res){
   })
 });
 
-app.get("/getArticle/:id", function(req, res){
+app.get("/deleteArticle/:id", function(req, res){
 
   db.NYT_articles.find({_id: mongojs.ObjectId(req.params.id)}, (err, data) => {
       if(err) console.log(err);
@@ -98,13 +98,23 @@ app.post("/addSaved", function(req, res){
   db.Saved_Articles.create(req.body)
 });
 
-app.post("/addComment/:comment", function(req, res){
-  console.log(req.params.comment)
-  db.Comment.updateOne({$push: req.body}, (err, data)=>{
-      if(err) console.log(err);
-      console.log(data)
-  })
-  res.end();
+// app.get("/comments/:id")
+
+app.post("/addComment", function(req, res){
+  console.log(req.body)
+    db.Comments.create({
+      content: req.body.content,
+      articleId: mongojs.ObjectID(req.body.articleId)
+    }).then(dbComment => db.Saved_Articles.findOneAndUpdate({_id: dbComment.articleId}, {$push:{ Comments: dbComment._id }}, {new: true}))
+    .then(dbArticle => res.json(dbArticle))
+    .catch(err => res.json(err))
+})
+
+app.get("/getComments/:id", function(req, res){
+  db.Comments.find({articleId: mongojs.ObjectID(req.params.id)})
+  .populate("Comment")
+  .then(dbSaved => res.json(dbSaved))
+  .catch(err => res.json(err))
 })
 
 app.get("/deleteSaved/:id", function(req, res){
