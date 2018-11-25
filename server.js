@@ -88,10 +88,11 @@ app.get("/deleteArticle/:id", function(req, res){
 
 app.get("/getSaved", function(req, res){
 
-  db.Saved_Articles.find({"deleted": false}, (err, data) => {
-      if(err) console.log(err);
-      else res.json(data)
-  }) 
+  db.Saved_Articles.find({"deleted": false})
+  .populate("Comments")
+  .then(result => res.json(result))
+  .catch(err => res.json(err))
+
 });
 
 app.post("/addSaved", function(req, res){
@@ -112,7 +113,7 @@ app.post("/addComment", function(req, res){
 
 app.get("/getComments/:id", function(req, res){
   db.Comments.find({articleId: mongojs.ObjectID(req.params.id)})
-  .populate("Comment")
+  .populate("Comments")
   .then(dbSaved => res.json(dbSaved))
   .catch(err => res.json(err))
 })

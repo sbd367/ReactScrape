@@ -4,6 +4,7 @@ import Card from "../../Components/Card";
 import API from "../../Utils/API"
 import DeleteButton from "../../Components/DeleteButton";
 import CommentButton from "../../Components/CommentButton";
+import Modal from "../../Components/Modal";
 
 
 class SavedPage extends Component{
@@ -16,11 +17,16 @@ class SavedPage extends Component{
 
     componentDidMount(){
         this.loadArticles();
+        
     }
 
     loadArticles = () => {
+
         API.getSaved()
-          .then(res => this.setState({ Articles: res.data}))
+          .then(res => {
+              this.setState({ Articles: res.data });
+              console.log(this.state)
+        })
           .catch(err => err);
     };
 
@@ -55,7 +61,15 @@ class SavedPage extends Component{
         let theId = event.target.name;
         console.log(theId)
         API.getComments(theId)
-        .then(res => this.setState({Comments: res.data.content}))
+        .then(res => {
+
+            let comments = [];
+
+            for(var i = 0; i <= res.data.length; i++){
+             return comments.push(res.data[i].content)
+             }
+            console.log(comments)
+        })
         .catch(err => err)
     }
 
@@ -87,13 +101,20 @@ class SavedPage extends Component{
                                     Summary=    {article.Summary || "No Summary"} 
                                     Headline=   {article.Headline} 
                                     URL=        {article.URL}
-                                    change=     {this.handleInputChange}
                                     value=      {this.state.content}
-                                    name=       "content"
                                     id=         {article._id}
-                                    clicks=     {this.handleComment}
-                                ><DeleteButton click={this.deleteSaved} name={article._id}/>
+                                >
+                                
+                                <DeleteButton click={this.deleteSaved} name={article._id}/>
                                 <CommentButton click={this.getComments} name={article._id}/>
+
+                                <Modal 
+                                    name=       "content" 
+                                    id=         {article._id} 
+                                    comments=    {article.Headline} 
+                                    change=     {this.handleInputChange} 
+                                    clicks=     {this.handleComment} 
+                                />
                                 </Card>
                             </Col>
 
