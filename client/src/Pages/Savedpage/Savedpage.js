@@ -5,6 +5,7 @@ import API from "../../Utils/API"
 import DeleteButton from "../../Components/DeleteButton";
 import CommentButton from "../../Components/CommentButton";
 import Modal from "../../Components/Modal";
+import "./style.css"
 
 
 class SavedPage extends Component{

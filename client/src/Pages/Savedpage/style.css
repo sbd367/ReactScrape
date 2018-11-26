@@ -1,0 +1,19 @@
+.TopButton{
+    display: inline-block;
+    padding-top: 1vh;
+    margin-left: 1vw;
+}
+.card-content{
+    margin-left: 10vw;
+}
+.card-title{
+    text-align: center;
+    margin-left: 4vw;
+    margin-right: 4vw;
+}
+.whiteText{
+    margin-right: 4vw;
+}
+.modal-trigger{
+    margin-left: 10px;
+}
