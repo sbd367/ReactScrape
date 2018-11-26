@@ -1,10 +1,10 @@
 import React from "react";
 
 const CommentButton = props =>(
-    <a className="waves-effect modal-trigger waves-light btn-large" name={props.name} onClick={props.click} href={"#"+props.name}>
+    <button className="waves-effect modal-trigger waves-light btn-large" name={props.name} onClick={props.click} data-target={props.name}>
         <i className="material-icons left">comment</i>
 
       Comment
-    </a>
+    </button>
 )
 export default CommentButton;
