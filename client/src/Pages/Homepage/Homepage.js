@@ -39,8 +39,6 @@ class HomePage extends Component{
         event.preventDefault();
 
        let newArticle = this.state.Articles.filter(el => el._id === event.target.name);
-
-       console.log(newArticle[0]._id)
         
         API.saveArticle(newArticle)
     };
