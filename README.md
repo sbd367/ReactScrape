@@ -1,6 +1,6 @@
-# Create React Express App
+# React Scrape
 
-## About This Boilerplate
+## About Tooling 
 
 This setup allows for a Node/Express/React app which can be easily deployed to Heroku.
 
